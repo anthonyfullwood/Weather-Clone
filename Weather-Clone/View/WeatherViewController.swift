@@ -9,15 +9,23 @@ import UIKit
 
 class WeatherViewController: UIViewController {
 
+    let weatherManager = WeatherManager()
     
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var tempLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var hTempLabel: UILabel!
+    @IBOutlet weak var lTempLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        weatherManager.fetchWeather(cityName:"cupertino")
     }
 
     @IBAction func currentLocationPressed(_ sender: UIButton) {
