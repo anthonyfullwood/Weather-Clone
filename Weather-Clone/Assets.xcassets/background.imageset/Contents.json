@@ -1,0 +1,35 @@
+{
+  "images" : [
+    {
+      "filename" : "vecteezy_blue-gradient-sky-blue-abstract-background-can-be-used-as_7675179.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "vecteezy_blue-gradient-sky-blue-abstract-background-can-be-used-as_7675179-1.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "vecteezy_abstract-purple-gradient-background_7626904.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}
