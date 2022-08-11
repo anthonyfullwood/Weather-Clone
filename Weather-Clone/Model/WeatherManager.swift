@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import CoreLocation
 
 protocol WeatherManagerDelegate{
     func didUpdateWeather(weather: WeatherModel)
+    
+    func didFailWithError(error: Error)
 }
 
 struct WeatherManager{
@@ -17,13 +20,21 @@ struct WeatherManager{
         
     var delegate: WeatherManagerDelegate?
     
+    // Method for fetching weather with a city name
     func fetchWeather(cityName: String){
         
-        let urlString = "\(weatherURL)&q=\(cityName)"
-        
+        let urlString = "\(weatherURL)&q=\(removeWhiteSpaceBetweenWords(string: cityName))"
         performRequest(urlString: urlString)
     }
     
+    // Method for fetching weather with a coordinates
+    func fetchWeather(with latitude: CLLocationDegrees, longitude: CLLocationDegrees){
+        
+        let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
+        performRequest(urlString: urlString)
+    }
+    
+    // Method for getting data from api provider
     func performRequest(urlString: String){
         
         let url = URL(string: urlString)
@@ -34,6 +45,7 @@ struct WeatherManager{
             let task = session.dataTask(with: url) { data, response, error in
                 
                 if error != nil {
+                    self.delegate?.didFailWithError(error: error!)
                     return
                 }
                 
@@ -52,6 +64,7 @@ struct WeatherManager{
         
     }
     
+    //Method for coverting JSON data into a swift readable format
     func parseJSON(data: Data) -> WeatherModel?{
         
         let decoder = JSONDecoder()
@@ -75,9 +88,31 @@ struct WeatherManager{
             
             
         }catch{
-            print(error)
+            
+            delegate?.didFailWithError(error: error)
             return nil
         }
         
+    }
+    
+    // Method for coverting city names with whitespace to a url readable format
+    func removeWhiteSpaceBetweenWords(string: String) -> String{
+        
+        var arr = Array(string)
+    
+        for (i,char) in  arr.enumerated(){
+            
+            if char == " " {
+                
+                if arr[i+1] != " "{
+                    arr[i] = "+"
+                    
+                }else{
+                    break
+                }
+            }
+        }
+        
+        return String(arr).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }

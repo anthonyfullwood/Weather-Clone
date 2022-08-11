@@ -133,7 +133,7 @@
                                     <constraint firstAttribute="width" constant="255" id="ls6-7X-bn0"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="search" smartInsertDeleteType="no"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="search" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="l9J-Le-Mg0"/>
                                 </connections>
@@ -450,7 +450,7 @@
         <image name="thermometer" catalog="system" width="32" height="32"/>
         <image name="wind" catalog="system" width="32" height="32"/>
         <namedColor name="modeColor">
-            <color red="0.36470589040000001" green="0.66274511810000003" blue="0.96470588450000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.36500000953674316" green="0.66299998760223389" blue="0.9649999737739563" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

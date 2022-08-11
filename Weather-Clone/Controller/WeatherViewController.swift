@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherViewController: UIViewController, WeatherManagerDelegate {
     
-    
     var weatherManager = WeatherManager()
+    let locationManager = CLLocationManager()
     
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var nameLabel: UILabel!
@@ -30,8 +31,13 @@ class WeatherViewController: UIViewController, WeatherManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    
         weatherManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
+        locationManager.requestLocation()
         
+        //Rounds edges of UIViews for different weather cards
         card1.layer.cornerRadius = 20
         card2.layer.cornerRadius = 20
         card3.layer.cornerRadius = 20
@@ -42,16 +48,21 @@ class WeatherViewController: UIViewController, WeatherManagerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         
+        //Calls weather manager objects's method for getting weather info with city name
         weatherManager.fetchWeather(cityName:"cupertino")
     }
 
     @IBAction func currentLocationPressed(_ sender: UIButton) {
+        
+        locationManager.requestLocation()
     }
     
     @IBAction func searchPressed(_ sender: UIButton) {
         
+        
         if let city = searchTextField.text {
-            weatherManager.fetchWeather(cityName: city.trimmingCharacters(in: .whitespacesAndNewlines))
+            
+            weatherManager.fetchWeather(cityName: city)
             
             searchTextField.text = ""
             searchTextField.resignFirstResponder()
@@ -59,8 +70,10 @@ class WeatherViewController: UIViewController, WeatherManagerDelegate {
         
     }
     
+    //MARK: - WeatherManager Delegate methods
     func didUpdateWeather(weather: WeatherModel) {
         
+        //Updates UI with weather data recieved from weather manager on main thread
         DispatchQueue.main.async {
             
             self.nameLabel.text = weather.cityName
@@ -69,14 +82,19 @@ class WeatherViewController: UIViewController, WeatherManagerDelegate {
             self.hTempLabel.text = weather.htemperatureString
             self.lTempLabel.text = weather.ltemperatureString
             self.windSpeedLabel.text = weather.windSpeedString
-            self.feelsLikeLabel.text = String(weather.feels_like)
+            self.feelsLikeLabel.text = weather.feelsLikeString
             self.pressureLabel.text = String(weather.pressure)
             self.humidityLabel.text = String(weather.humidity)
         }
         
     }
+    
+    func didFailWithError(error: Error) {
+        print(error)
+    }
 }
 
+//MARK: - UTextField delegate extension
 extension WeatherViewController: UITextFieldDelegate{
     
     
@@ -95,11 +113,34 @@ extension WeatherViewController: UITextFieldDelegate{
         
         
         if let city = textField.text {
-            weatherManager.fetchWeather(cityName: city.trimmingCharacters(in: .whitespacesAndNewlines))
+            weatherManager.fetchWeather(cityName: city)
         }
         
         textField.resignFirstResponder()
         return true
     }
     
+}
+
+//MARK: - CLLocation delegate extension
+extension WeatherViewController: CLLocationManagerDelegate{
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let location = locations.last
+        let latitute = location?.coordinate.latitude
+        let longitude = location?.coordinate.longitude
+        
+        
+        //Calls weather manager objects's method for getting weather info with coordinates
+        if let lat = latitute, let lon = longitude{
+            weatherManager.fetchWeather(with: lat, longitude: lon)
+        }
+       
+        
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
 }
