@@ -7,10 +7,15 @@
 
 import Foundation
 
+protocol WeatherManagerDelegate{
+    func didUpdateWeather(weather: WeatherModel)
+}
+
 struct WeatherManager{
     
-    let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=86911fd19e56b71a7b4bf094ebdd2972&exclude=minutely&units=metric"
-    
+    let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=86911fd19e56b71a7b4bf094ebdd2972&units=metric"
+        
+    var delegate: WeatherManagerDelegate?
     
     func fetchWeather(cityName: String){
         
@@ -34,7 +39,9 @@ struct WeatherManager{
                 
                 if let safeData = data{
                     
-                    parseData(data: safeData)
+                    if let weather = parseJSON(data: safeData){
+                        self.delegate?.didUpdateWeather(weather: weather)
+                    }
                 }
                 
             }
@@ -45,17 +52,31 @@ struct WeatherManager{
         
     }
     
-    func parseData(data: Data){
+    func parseJSON(data: Data) -> WeatherModel?{
         
         let decoder = JSONDecoder()
         
         do{
-            let decodedData = try decoder.decode(CurrentWeatherData.self, from: data)
+            let decodedData = try decoder.decode(WeatherData.self, from: data)
             
-            print(decodedData.main.temp_max)
+            let cityName = decodedData.name
+            let description = decodedData.weather[0].main
+            let temp = decodedData.main.temp
+            let hTemp = decodedData.main.temp_max
+            let lTemp = decodedData.main.temp_min
+            let wind = decodedData.wind.speed
+            let humidity = decodedData.main.humidity
+            let pressure = decodedData.main.pressure
+            let feels_like = decodedData.main.feels_like
+            
+            let weather = WeatherModel(cityName: cityName, temperature: temp, description:description, htemperature: hTemp, ltemperature: lTemp, feels_like: feels_like, pressure: pressure, humidity: humidity, windSpeed: wind)
+            
+            return weather
+            
             
         }catch{
             print(error)
+            return nil
         }
         
     }

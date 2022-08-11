@@ -7,13 +7,12 @@
 
 import Foundation
 
-struct CurrentWeatherData: Codable{
+struct WeatherData: Codable{
     
     let name: String
     let main: Main
-    //let hourly: [Hourly]
-    //let daily: [Daily]
     let weather: [Weather]
+    let wind: Wind
 }
 
 struct Main: Codable{
@@ -21,27 +20,20 @@ struct Main: Codable{
     let temp: Double
     let temp_max: Double
     let temp_min: Double
+    let feels_like: Double
+    let pressure: Int
+    let humidity: Int
     
 }
 
-/*struct Hourly: Codable{
+struct Wind: Codable{
     
-    let dt: Int
-    let temp: Double
-    let weather: [Weather]
+    let speed: Double
 }
-
-struct Daily: Codable{
-    
-    let dt: Int
-    let temp: Double
-    let weather: [Weather]
-}*/
-
 struct Weather: Codable{
     
-    let description: String
-    let id: Int
+    let main: String
+   
 }
 
 
