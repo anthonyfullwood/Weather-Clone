@@ -1,5 +1,5 @@
 # Weather-Clone
-This project is a based on the default Apple Weather App.<br />
+This project is a based on the default IOS Weather App.<br />
 
 The technology stack used in this procject: <br />
 
